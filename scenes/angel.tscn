@@ -2,6 +2,17 @@
 
 [ext_resource type="Script" uid="uid://c25i1xdsch2e" path="res://scripts/angel/Angel.cs" id="1_fgtlr"]
 
+[sub_resource type="Gradient" id="Gradient_mtvsi"]
+offsets = PackedFloat32Array(0, 0.686747)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5r7gm"]
+gradient = SubResource("Gradient_mtvsi")
+width = 512
+height = 512
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
 [sub_resource type="Gradient" id="Gradient_nxi2q"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
@@ -39,6 +50,17 @@ dashUnlocked = true
 dashSpeed = 2500.0
 walljumpUnlocked = true
 wallJumpStrength = 2000.0
+
+[node name="Lights" type="Node2D" parent="." unique_id=698091322]
+
+[node name="Far" type="PointLight2D" parent="Lights" unique_id=100505153]
+energy = 0.5
+texture = SubResource("GradientTexture2D_5r7gm")
+texture_scale = 2.0
+
+[node name="Close" type="PointLight2D" parent="Lights" unique_id=1664105766]
+texture = SubResource("GradientTexture2D_5r7gm")
+texture_scale = 0.8
 
 [node name="TempSprite" type="Sprite2D" parent="." unique_id=1319976982]
 texture = SubResource("GradientTexture2D_n3gap")

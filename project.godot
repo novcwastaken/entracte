@@ -96,4 +96,5 @@ toggle_debug_overlay={
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
+anti_aliasing/quality/use_debanding=true
 environment/defaults/default_clear_color=Color(0.096204735, 0.09620475, 0.096204735, 1)

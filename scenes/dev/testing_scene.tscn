@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://dv0jhj1i3khiw" path="res://sprites/dev/dev_sheet.png" id="3_cf51v"]
 [ext_resource type="Script" uid="uid://dnsa21ud147ji" path="res://scripts/Camera.cs" id="3_l4w0r"]
 [ext_resource type="FontFile" uid="uid://dr5qifsv6c3tx" path="res://fonts/TASA_Orbiter/TASAOrbiter-Regular.ttf" id="4_l4w0r"]
-[ext_resource type="Script" uid="uid://bfroai44j6urw" path="res://scripts/debug/ImGuiTest.cs" id="5_4ara7"]
+[ext_resource type="Shader" uid="uid://d2nlg11b2rwi8" path="res://shaders/vignette.gdshader" id="5_twine"]
+[ext_resource type="Script" uid="uid://1qj6wq27e83s" path="res://scripts/developer_overlay/DeveloperOverlay.cs" id="6_twine"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l4w0r"]
 texture = ExtResource("3_cf51v")
@@ -32,12 +33,29 @@ tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_l4w0r")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k7fmy"]
+shader = ExtResource("5_twine")
+shader_parameter/alpha = 0.675
+shader_parameter/inner_radius = 0.335
+shader_parameter/outer_radius = 2.265
+
 [sub_resource type="LabelSettings" id="LabelSettings_c2ybn"]
 line_spacing = 0.0
 font = ExtResource("4_l4w0r")
 font_size = 12
 
 [node name="TestingScene" type="Node2D" unique_id=774069970]
+
+[node name="BGLayer" type="CanvasLayer" parent="." unique_id=1887706926]
+layer = -1
+
+[node name="Background" type="ColorRect" parent="BGLayer" unique_id=420695201]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09803922, 0.09803922, 0.09803922, 1)
 
 [node name="Angel" parent="." unique_id=944199170 node_paths=PackedStringArray("camera", "debugLabel") instance=ExtResource("2_5rru7")]
 position = Vector2(960, 640)
@@ -67,6 +85,14 @@ followTarget = NodePath("../Angel")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=564620556]
 
+[node name="Vignette" type="ColorRect" parent="CanvasLayer" unique_id=2033350397]
+material = SubResource("ShaderMaterial_k7fmy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="DebugLabel" type="Label" parent="CanvasLayer" unique_id=1881520673]
 offset_left = 8.0
 offset_top = 8.0
@@ -75,5 +101,9 @@ offset_bottom = 72.0
 text = "[Debug Label] "
 label_settings = SubResource("LabelSettings_c2ybn")
 
-[node name="ImGuiTest" type="Node" parent="." unique_id=385629316]
-script = ExtResource("5_4ara7")
+[node name="DeveloperOverlay" type="Node" parent="." unique_id=385629316 node_paths=PackedStringArray("angel")]
+script = ExtResource("6_twine")
+angel = NodePath("../Angel")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=46476331]
+color = Color(0.8132577, 0.8132577, 0.81325763, 1)
