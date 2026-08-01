@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ImGui="*uid://dq1sjhm2xe0ux"
 ImGuiTest2="*uid://7jsxh1vwfdsm"
+ImGuiRoot="*uid://dugmpnsxaagba"
 
 [display]
 
@@ -34,7 +34,7 @@ project/assembly_name="ENTR-ACTE"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/at-icons/plugin.cfg", "res://addons/dear-imgui-godot/plugin.cfg")
+enabled=PackedStringArray("res://addons/at-icons/plugin.cfg", "res://addons/imgui-godot/plugin.cfg")
 
 [global_group]
 
@@ -94,5 +94,6 @@ toggle_debug_overlay={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 environment/defaults/default_clear_color=Color(0.096204735, 0.09620475, 0.096204735, 1)

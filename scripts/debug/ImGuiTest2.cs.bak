@@ -1,0 +1,139 @@
+using Godot;
+
+public partial class ImGuiTest2 : Node {
+    [Export] private NodePath angelPath;
+
+    private bool showDebugOverlay = false;
+    private Angel angel;
+
+    public override void _Ready() {
+        ImGui.OnLayout(OnLayout);
+
+        angel = GetNodeOrNull<Angel>(angelPath);
+        if (angel == null && GetTree().CurrentScene != null) {
+            angel = GetTree().CurrentScene.GetNodeOrNull<Angel>("Angel");
+        }
+    }
+
+    public override void _UnhandledInput(InputEvent @event) {
+        if (@event.IsActionPressed("toggle_debug_overlay")) {
+            showDebugOverlay = !showDebugOverlay;
+        }
+    }
+
+    private void OnLayout() {
+        if (!showDebugOverlay) return;
+
+        ImGui.Begin("Angel");
+        ImGui.SetWindowFontScale(0.75f);
+
+        ImGui.TextColored(Colors.Fuchsia, "cool ass red text");
+        ImGui.Separator();
+
+        if (angel == null) {
+            ImGui.Text("Angel not found");
+            ImGui.End();
+            return;
+        }
+
+        if (ImGui.BeginTabBar("AngelDebugTabs")) {
+            if (ImGui.BeginTabItem("Stats")) {
+                ImGui.Text($"Position: {angel.DebugPosition}");
+                ImGui.Text($"Velocity: {angel.DebugVelocity}");
+                ImGui.Text($"Input direction: {angel.DebugInputDirection}");
+                ImGui.Text($"Last direction X: {angel.DebugLastDirectionX}");
+                ImGui.Text($"Dash direction X: {angel.DebugDashDirectionX}");
+                ImGui.Text($"Is dashing: {angel.DebugIsDashing}");
+                ImGui.Text($"Can dash: {angel.DebugCanDash}");
+                ImGui.Text($"Is gliding: {angel.DebugIsGliding}");
+                ImGui.Text($"Wall state: {angel.DebugWallState}");
+                ImGui.Text($"Can buffer jump: {angel.DebugCanBufferJump}");
+                ImGui.Text($"Can coyote jump: {angel.DebugCanCoyoteJump}");
+                ImGui.Text($"Can start glide: {angel.DebugCanStartGlide}");
+                DrawVector2("Position", new Vector2(500, 1000));
+                
+                //ImGui.PushStyleColor(ImGui.Col)
+                ImGui.ProgressBar(0.5f, new Vector2(400f, 0f), " ");
+
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Toggles")) {
+                bool doubleJumpUnlocked = angel.DebugDoubleJumpUnlocked;
+                bool newDoubleJumpUnlocked = ImGui.Checkbox("Double jump unlock", doubleJumpUnlocked);
+                if (newDoubleJumpUnlocked != doubleJumpUnlocked) {
+                    angel.SetDoubleJumpUnlocked(newDoubleJumpUnlocked);
+                }
+
+                bool glideUnlocked = angel.DebugGlideUnlocked;
+                bool newGlideUnlocked = ImGui.Checkbox("Glide unlock", glideUnlocked);
+                if (newGlideUnlocked != glideUnlocked) {
+                    angel.SetGlideUnlocked(newGlideUnlocked);
+                }
+
+                ImGui.EndTabItem();
+            }
+
+            ImGui.EndTabBar();
+        }
+
+        ImGui.End();
+    }
+
+    // Custom colors matching Godot's inspector accent hues
+    private static readonly Color RedAccent = new(0.85f, 0.25f, 0.25f, 1.0f);
+    private static readonly Color GreenAccent = new(0.25f, 0.75f, 0.25f, 1.0f);
+    private static readonly Color DarkBg = new(0.15f, 0.15f, 0.15f, 0.6f);
+
+    /// <summary>
+    /// Displays a Godot Vector2 with color-coded X (red) and Y (green) fields in Godot Inspector style.
+    /// </summary>
+    public static void DrawVector2(string label, Godot.Vector2 vector, string format = "0.00")
+    {
+        ImGui.BeginGroup();
+
+        // 1. Label column
+        ImGui.Text(label);
+        ImGui.SameLine(100, -1); // Align values across multiple Vector2 rows
+
+        float fieldWidth = 70.0f;
+
+        // --- X Field ---
+        // Red 'X' Badge
+        ImGui.PushStyleColor(ImGui.ColButton, RedAccent);
+        ImGui.PushStyleColor(ImGui.ColButtonHovered, RedAccent);
+        ImGui.PushStyleColor(ImGui.ColButtonActive, RedAccent);
+        ImGui.Button("X", 20, 0);
+        ImGui.PopStyleColor(3);
+
+        ImGui.SameLine(0, 2);
+
+        // X Value Box
+        ImGui.PushStyleColor(ImGui.ColFrameBg, DarkBg);
+        ImGui.SetNextItemWidth(fieldWidth);
+        string xText = vector.X.ToString(format);
+        ImGui.InputText($"##{label}_x", xText, 32, ImGui.InputTextReadOnly);
+        ImGui.PopStyleColor();
+
+        ImGui.SameLine(0, 8);
+
+        // --- Y Field ---
+        // Green 'Y' Badge
+        ImGui.PushStyleColor(ImGui.ColButton, GreenAccent);
+        ImGui.PushStyleColor(ImGui.ColButtonHovered, GreenAccent);
+        ImGui.PushStyleColor(ImGui.ColButtonActive, GreenAccent);
+        ImGui.Button("Y", 20, 0);
+        ImGui.PopStyleColor(3);
+
+        ImGui.SameLine(0, 2);
+
+        // Y Value Box
+        ImGui.PushStyleColor(ImGui.ColFrameBg, DarkBg);
+        ImGui.SetNextItemWidth(fieldWidth);
+        string yText = vector.Y.ToString(format);
+        ImGui.InputText($"##{label}_y", yText, 32, ImGui.InputTextReadOnly);
+        ImGui.PopStyleColor();
+
+        ImGui.EndGroup();
+    }
+}

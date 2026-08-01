@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+[GlobalClass, Icon("res://addons/at-icons/mesh/wing.svg")]
 public partial class Angel : CharacterBody2D {
 	[ExportGroup("Nodes")]
 	[ExportSubgroup("Timers")]
@@ -47,6 +48,11 @@ public partial class Angel : CharacterBody2D {
 		glideUnlocked = enabled;
 	}
 
+	public override void _Ready() {
+		ReadyMovement();
+		ReadyCombat();
+	}
+
 	public override void _PhysicsProcess(double delta) {
 		ProcessMovement(delta);
 		ProcessFlip();
@@ -90,6 +96,8 @@ public partial class Angel : CharacterBody2D {
 			- !canBufferJump = {!canBufferJump}
 
 			isGliding = {isGliding}
+
+			attackTimer.TimeLeft = {attackTimer.TimeLeft}
 		""";
 	}
 

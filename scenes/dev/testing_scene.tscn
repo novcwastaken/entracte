@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dv0jhj1i3khiw" path="res://sprites/dev/dev_sheet.png" id="3_cf51v"]
 [ext_resource type="Script" uid="uid://dnsa21ud147ji" path="res://scripts/Camera.cs" id="3_l4w0r"]
 [ext_resource type="FontFile" uid="uid://dr5qifsv6c3tx" path="res://fonts/TASA_Orbiter/TASAOrbiter-Regular.ttf" id="4_l4w0r"]
+[ext_resource type="Script" uid="uid://bfroai44j6urw" path="res://scripts/debug/ImGuiTest.cs" id="5_4ara7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l4w0r"]
 texture = ExtResource("3_cf51v")
@@ -73,3 +74,6 @@ offset_right = 136.0
 offset_bottom = 72.0
 text = "[Debug Label] "
 label_settings = SubResource("LabelSettings_c2ybn")
+
+[node name="ImGuiTest" type="Node" parent="." unique_id=385629316]
+script = ExtResource("5_4ara7")

@@ -94,6 +94,7 @@ one_shot = true
 
 [node name="AttackTimer" type="Timer" parent="Timers/Combat" unique_id=1003586834]
 wait_time = 0.3
+one_shot = true
 
 [connection signal="timeout" from="Timers/Movement/DashTimer" to="." method="OnDashTimerTimeout"]
 [connection signal="timeout" from="Timers/Movement/DashCooldownTimer" to="." method="OnDashCooldownTimerTimeout"]
