@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://cvbp5y4a5iul2"]
+
+[ext_resource type="Script" uid="uid://c25i1xdsch2e" path="res://scripts/angel/Angel.cs" id="1_fgtlr"]
+
+[sub_resource type="Gradient" id="Gradient_nxi2q"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n3gap"]
+gradient = SubResource("Gradient_nxi2q")
+height = 128
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_whldq"]
+size = Vector2(64, 128)
+
+[sub_resource type="Gradient" id="Gradient_fgtlr"]
+colors = PackedColorArray(0, 1, 1, 1, 0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c2ybn"]
+gradient = SubResource("Gradient_fgtlr")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c2ybn"]
+size = Vector2(64, 64)
+
+[node name="Angel" type="CharacterBody2D" unique_id=944199170 node_paths=PackedStringArray("jumpBufferTimer", "coyoteTimer", "dashTimer", "dashCooldownTimer", "walljumpLeaveTimer", "verticalLookTimer", "attackTimer", "attackParent", "attackSprite", "attackArea", "attackCollisionShape") groups=["angel"]]
+script = ExtResource("1_fgtlr")
+jumpBufferTimer = NodePath("Timers/Movement/JumpBufferTimer")
+coyoteTimer = NodePath("Timers/Movement/CoyoteTimer")
+dashTimer = NodePath("Timers/Movement/DashTimer")
+dashCooldownTimer = NodePath("Timers/Movement/DashCooldownTimer")
+walljumpLeaveTimer = NodePath("Timers/Movement/WalljumpLeaveTimer")
+verticalLookTimer = NodePath("Timers/Movement/VerticalLookTimer")
+attackTimer = NodePath("Timers/Combat/AttackTimer")
+attackParent = NodePath("Attack")
+attackSprite = NodePath("Attack/TempAttackSprite")
+attackArea = NodePath("Attack/TempAttackSprite/AttackArea2D")
+attackCollisionShape = NodePath("Attack/TempAttackSprite/AttackArea2D/CollisionShape2D")
+jumpVelocity = 1650.0
+dashUnlocked = true
+dashSpeed = 2500.0
+walljumpUnlocked = true
+wallJumpStrength = 2000.0
+
+[node name="TempSprite" type="Sprite2D" parent="." unique_id=1319976982]
+texture = SubResource("GradientTexture2D_n3gap")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=102251534]
+shape = SubResource("RectangleShape2D_whldq")
+
+[node name="Attack" type="Node2D" parent="." unique_id=2075997805]
+
+[node name="TempAttackSprite" type="Sprite2D" parent="Attack" unique_id=132083763]
+scale = Vector2(1.5, 2)
+texture = SubResource("GradientTexture2D_c2ybn")
+offset = Vector2(60, 0)
+
+[node name="AttackArea2D" type="Area2D" parent="Attack/TempAttackSprite" unique_id=1233873803]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack/TempAttackSprite/AttackArea2D" unique_id=232376186]
+position = Vector2(60, 0)
+shape = SubResource("RectangleShape2D_c2ybn")
+debug_color = Color(0.8675824, 0.0005225074, 0.85215527, 0.41960785)
+
+[node name="Timers" type="Node" parent="." unique_id=1620616911]
+
+[node name="Movement" type="Node" parent="Timers" unique_id=1363524]
+
+[node name="JumpBufferTimer" type="Timer" parent="Timers/Movement" unique_id=1811963384]
+process_callback = 0
+wait_time = 0.1
+one_shot = true
+
+[node name="CoyoteTimer" type="Timer" parent="Timers/Movement" unique_id=1629244697]
+process_callback = 0
+wait_time = 0.12
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="Timers/Movement" unique_id=275967533]
+wait_time = 0.1
+one_shot = true
+
+[node name="DashCooldownTimer" type="Timer" parent="Timers/Movement" unique_id=1015805256]
+wait_time = 0.25
+one_shot = true
+
+[node name="WalljumpLeaveTimer" type="Timer" parent="Timers/Movement" unique_id=2091791197]
+wait_time = 0.04
+one_shot = true
+
+[node name="VerticalLookTimer" type="Timer" parent="Timers/Movement" unique_id=2007734368]
+wait_time = 0.5
+one_shot = true
+
+[node name="Combat" type="Node" parent="Timers" unique_id=2138101682]
+
+[node name="AttackTimer" type="Timer" parent="Timers/Combat" unique_id=1003586834]
+wait_time = 0.3
+
+[connection signal="timeout" from="Timers/Movement/DashTimer" to="." method="OnDashTimerTimeout"]
+[connection signal="timeout" from="Timers/Movement/DashCooldownTimer" to="." method="OnDashCooldownTimerTimeout"]
+[connection signal="timeout" from="Timers/Movement/VerticalLookTimer" to="." method="OnVerticalLookTimerTimeout"]
+[connection signal="timeout" from="Timers/Combat/AttackTimer" to="." method="OnAttackTimerTimeout"]
