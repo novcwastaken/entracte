@@ -4,17 +4,27 @@ using ImGuiNET;
 
 public partial class DeveloperOverlay : Node {
     [Export] private Angel angel;
+    [Export] private bool overlayEnabled = false;
 
     private readonly ImGuiTableFlags keyValueTableFlags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg;
-    private readonly float windowWidth = 300f;
+    private readonly float windowWidth = 350f;
 
     private bool statsWindowVisible = true;
     private bool unlocksWindowVisible = true;
     private bool cheatsWindowVisible = true;
 
-    public override void _Process(double delta) {
-        // TODO: Add F3 toggle
+    public override void _UnhandledInput(InputEvent @event) {
+        if (@event.IsActionPressed("toggle_developer_overlay")) {
+            overlayEnabled = !overlayEnabled;
+        }
+    }
 
+    public override void _Process(double delta) {
+        if (!overlayEnabled) return;
+        MainOverlay();        
+    }
+
+    private void MainOverlay() {
         var viewportSize = GetViewport().GetVisibleRect().Size;
         var toggleWindowSize = new System.Numerics.Vector2(220f, 120f);
 
@@ -52,35 +62,5 @@ public partial class DeveloperOverlay : Node {
 
     private uint GodotColorToU32(Color color) {
         return ImGui.ColorConvertFloat4ToU32(new System.Numerics.Vector4(color.R, color.G, color.B, color.A));
-    }
-
-    private void BoolDisplay(bool value) {
-        Color boolColor = value ? Colors.Green : Colors.Red;
-
-        ImGui.PushStyleColor(ImGuiCol.Text, GodotColorToU32(boolColor));
-        ImGui.Text(value.ToString());
-        ImGui.PopStyleColor();
-    }
-
-    private void Vector2Display(Vector2 vector2) {
-        ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new System.Numerics.Vector2(0f, 0f));
-
-        if (ImGui.BeginTable("Vector2", 2)) {
-            ImGui.TableNextRow();
-
-            ImGui.TableNextColumn();
-            ImGui.PushStyleColor(ImGuiCol.Text, GodotColorToU32(Colors.Magenta));
-            ImGui.Text(vector2.X.ToString("0.00"));
-            ImGui.PopStyleColor();
-
-            ImGui.TableNextColumn();
-            ImGui.PushStyleColor(ImGuiCol.Text, GodotColorToU32(Colors.Orange));
-            ImGui.Text(vector2.Y.ToString("0.00"));
-            ImGui.PopStyleColor();
-
-            ImGui.EndTable();
-        }
-
-        ImGui.PopStyleVar();
     }
 }

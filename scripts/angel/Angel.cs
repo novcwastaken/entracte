@@ -25,29 +25,6 @@ public partial class Angel : CharacterBody2D {
 	[ExportGroup("Debug")]
 	[Export] private Label debugLabel;
 
-	public Vector2 DebugPosition => GlobalPosition;
-	public Vector2 DebugVelocity => Velocity;
-	public Vector2 DebugInputDirection => inputDirection;
-	public int DebugLastDirectionX => lastDirectionX;
-	public int DebugDashDirectionX => dashDirectionX;
-	public bool DebugIsDashing => isDashing;
-	public bool DebugCanDash => canDash;
-	public bool DebugIsGliding => isGliding;
-	public string DebugWallState => wallState.ToString();
-	public bool DebugCanBufferJump => canBufferJump;
-	public bool DebugCanCoyoteJump => canCoyoteJump;
-	public bool DebugCanStartGlide => canStartGlide;
-	public bool DebugDoubleJumpUnlocked => doubleJumpUnlocked;
-	public bool DebugGlideUnlocked => glideUnlocked;
-
-	public void SetDoubleJumpUnlocked(bool enabled) {
-		doubleJumpUnlocked = enabled;
-	}
-
-	public void SetGlideUnlocked(bool enabled) {
-		glideUnlocked = enabled;
-	}
-
 	public override void _Ready() {
 		ReadyMovement();
 		ReadyCombat();
@@ -78,6 +55,8 @@ public partial class Angel : CharacterBody2D {
 			isDashing = {isDashing}
 			canDash = {canDash}
 			dashDirectionX = {dashDirectionX}
+
+			debugDashTimer.TimeLeft = {debugDashTimer.TimeLeft}
 
 			wallNormal = {GetWallNormal()}
 			isOnWall = {IsOnWall()}

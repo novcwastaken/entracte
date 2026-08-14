@@ -104,6 +104,7 @@ label_settings = SubResource("LabelSettings_c2ybn")
 [node name="DeveloperOverlay" type="Node" parent="." unique_id=385629316 node_paths=PackedStringArray("angel")]
 script = ExtResource("6_twine")
 angel = NodePath("../Angel")
+overlayEnabled = true
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=46476331]
 color = Color(0.8132577, 0.8132577, 0.81325763, 1)

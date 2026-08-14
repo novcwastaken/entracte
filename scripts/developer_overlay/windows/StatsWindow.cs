@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using ImGuiNET;
 
@@ -8,60 +9,67 @@ public partial class DeveloperOverlay : Node {
         ImGui.Dummy(new System.Numerics.Vector2(0, 10f));
 
         if (ImGui.CollapsingHeader("Base", ImGuiTreeNodeFlags.DefaultOpen)) {
-            if (ImGui.TreeNodeEx("Movement", ImGuiTreeNodeFlags.DefaultOpen)) {
-                if (ImGui.BeginTable("MovementTable", 2, keyValueTableFlags)) {
-                    ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
-                    ImGui.Text("Position");
-                    ImGui.TableNextColumn();
-                    Vector2Display(angel.Position);
+            Tree("Movement", true, () => {
+                KeyValueTable("MovementTable", () => {
+                    KeyValueTableRow("Position", () => Vector2Display(angel.Position));
+                    KeyValueTableRow("Velocity", () => Vector2Display(angel.Velocity));
+                    KeyValueTableRow("Is on floor?", () => BoolDisplay(angel.IsOnFloor()));
+                    KeyValueTableRow("Is on ceiling?", () => BoolDisplay(angel.IsOnCeiling()));
+                    KeyValueTableRow("Is on wall?", () => BoolDisplay(angel.IsOnWall()));
+                    KeyValueTableRow("Is on wall only?", () => BoolDisplay(angel.IsOnWallOnly()));
+                    KeyValueTableRow("Wall normal", () => Vector2Display(angel.GetWallNormal()));
+                });
+            });
 
-                    ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
-                    ImGui.Text("Velocity");
-                    ImGui.TableNextColumn();
-                    Vector2Display(angel.Velocity);
-
-                    ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
-                    ImGui.Text("Is on floor?");
-                    ImGui.TableNextColumn();
-                    BoolDisplay(angel.IsOnFloor());
-
-                    // MOVEMENT
-                    // Position
-                    // Velocity
-                    // Is on floor
-                    // Is on ceiling
-                    // Is on wall
-                    // Is on wall only
-                    // Wall normal
-
-                    // INPUT
-                    // Input direction
-                    // Last direction X
-
-                    ImGui.EndTable();
-                }
-
-                // TODO: Make helper for table (enter key string, pass in method for displaying )
-                // TODO: Add Vector2 display, string display, enum display for wall state, timer display
-                
-                ImGui.TreePop();
-            }
-
-            if (ImGui.TreeNodeEx("Input", ImGuiTreeNodeFlags.DefaultOpen)) {
-                ImGui.Text("Input Direction");
-
-                ImGui.TreePop();
-            }
+            Tree("Input", true, () => {
+                KeyValueTable("InputTable", () => {
+                   KeyValueTableRow("Input direction", () => Vector2Display(angel.debugInputDirection));
+                   KeyValueTableRow("Last direciton X", () => ValueDisplay(angel.debugLastDirectionX));
+                });
+            });
         }
 
         if (ImGui.CollapsingHeader("Abilities", ImGuiTreeNodeFlags.DefaultOpen)) {
-            if (ImGui.TreeNodeEx("Dash", ImGuiTreeNodeFlags.DefaultOpen)) {
-                ImGui.Text("Dash miau");
+            Tree("Dash", true, () => {
+                // dash unlocked?
+                // dash direction x
+                // ---
+                // is dashing?
+                // can dash?
+                // can start dash?
+                // can regain dash?
+                // ---
+                // dash timer
+                // dash cooldown timer
 
-                ImGui.TreePop();
+                KeyValueTable("DashTable1", () => {
+                    KeyValueTableRow("Dash unlocked?", () => BoolDisplay(angel.debugDashUnlocked));
+                    KeyValueTableRow("Dash direction X", () => ValueDisplay(angel.debugDashDirectionX));
+                    KeyValueTableRow("Is dashing?", () => BoolDisplay(angel.debugIsDashing));
+                    KeyValueTableRow("Can dash?", () => BoolDisplay(angel.debugCanDash));
+                    KeyValueTableRow("Can start dash?", () => BoolDisplay(angel.debugCanStartDash));
+                    KeyValueTableRow("Can regain dash?", () => BoolDisplay(angel.debugCanRegainDash));
+                    KeyValueTableRow("Dash timer",() => TimerDisplay(angel.debugDashTimer));
+                    KeyValueTableRow("Dash cooldown timer",() => TimerDisplay(angel.debugDashCooldownTimer));
+                });
+            });
+
+            // Double jump
+            // Walljump
+            // Glide
+        }        
+    }
+
+    private void Tree(string title, bool defaultOpen, Action children) {
+        if (defaultOpen) {
+            if (ImGui.TreeNodeEx(title, ImGuiTreeNodeFlags.DefaultOpen)) {
+                children();
+                ImGui.TreePop();             
+            }
+        } else {
+            if (ImGui.TreeNodeEx(title)) {
+                children();
+                ImGui.TreePop();       
             }
         }
     }
