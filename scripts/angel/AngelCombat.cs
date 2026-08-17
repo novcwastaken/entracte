@@ -47,6 +47,9 @@ public partial class Angel : CharacterBody2D {
     private void AttackAreaHit(Node node) {
         if (node == this) return;
         if ((node.IsInGroup("pogoable") || node.GetParent().IsInGroup("pogoable")) && lastAttackDirection.Y > 0) {
+            doubleJumpUsed = false;
+            isGliding = false;
+            
             controlledVelocity.Y = -pogoVelocity;
             RegainDash();
         }
@@ -62,5 +65,3 @@ public partial class Angel : CharacterBody2D {
         attackCooldownTimer.Start();
     }
 }
-
-// TODO: Fix walljump but no horizontal boost on non-walljupmable spikes
