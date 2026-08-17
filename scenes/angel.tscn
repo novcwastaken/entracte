@@ -37,7 +37,7 @@ size = Vector2(64, 64)
 [sub_resource type="LabelSettings" id="LabelSettings_mtvsi"]
 font = ExtResource("3_6gyu6")
 
-[node name="Angel" type="CharacterBody2D" unique_id=944199170 node_paths=PackedStringArray("jumpBufferTimer", "coyoteTimer", "dashTimer", "dashCooldownTimer", "walljumpLeaveTimer", "verticalLookTimer", "attackTimer", "healthComponent", "healthLabel", "attackParent", "attackSprite", "attackArea", "attackCollisionShape") groups=["angel"]]
+[node name="Angel" type="CharacterBody2D" unique_id=944199170 node_paths=PackedStringArray("jumpBufferTimer", "coyoteTimer", "dashTimer", "dashCooldownTimer", "walljumpLeaveTimer", "verticalLookTimer", "attackTimer", "attackCooldownTimer", "healthComponent", "healthLabel", "attackParent", "attackSprite", "attackArea", "attackCollisionShape") groups=["angel"]]
 script = ExtResource("1_fgtlr")
 jumpBufferTimer = NodePath("Timers/Movement/JumpBufferTimer")
 coyoteTimer = NodePath("Timers/Movement/CoyoteTimer")
@@ -46,6 +46,7 @@ dashCooldownTimer = NodePath("Timers/Movement/DashCooldownTimer")
 walljumpLeaveTimer = NodePath("Timers/Movement/WalljumpLeaveTimer")
 verticalLookTimer = NodePath("Timers/Movement/VerticalLookTimer")
 attackTimer = NodePath("Timers/Combat/AttackTimer")
+attackCooldownTimer = NodePath("Timers/Combat/AttackCooldownTimer")
 healthComponent = NodePath("Components/HealthComponent")
 healthLabel = NodePath("HealthLabel")
 attackParent = NodePath("Attack")
@@ -128,6 +129,10 @@ one_shot = true
 
 [node name="AttackTimer" type="Timer" parent="Timers/Combat" unique_id=1003586834]
 wait_time = 0.1
+one_shot = true
+
+[node name="AttackCooldownTimer" type="Timer" parent="Timers/Combat" unique_id=467317876]
+wait_time = 0.2
 one_shot = true
 
 [node name="Components" type="Node" parent="." unique_id=733948241]

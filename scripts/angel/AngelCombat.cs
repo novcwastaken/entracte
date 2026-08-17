@@ -13,6 +13,8 @@ public partial class Angel : CharacterBody2D {
     [Export] private Area2D attackArea;
     [Export] private CollisionShape2D attackCollisionShape;
 
+    private Vector2 lastAttackDirection;
+
     private bool isAttacking => !attackTimer.IsStopped();
 
     private void ReadyCombat() {
@@ -23,11 +25,17 @@ public partial class Angel : CharacterBody2D {
     }
 
     private void Attack() {
-        if (!attackTimer.IsStopped()) return;
+        if (isAttacking || !attackCooldownTimer.IsStopped()) return;
+
+        lastAttackDirection = inputDirection;
+
         if (inputDirection.Y != 0f && (inputDirection.Y < 0 || !IsOnFloor())) {
             attackParent.RotationDegrees = inputDirection.Y > 0 ? 90f : -90f;
         } else {
-            attackParent.RotationDegrees = (inputDirection.X > 0 || lastDirectionX > 0) ? 0f : 180f;
+            bool isFacingRight = inputDirection.X > 0 || lastDirectionX > 0;
+            bool isNotOnWall = wallState == WallState.NONE;
+
+            attackParent.RotationDegrees = (isFacingRight == isNotOnWall) ? 0f : 180f;
         }
 
         attackCollisionShape.Disabled = false;
@@ -38,7 +46,7 @@ public partial class Angel : CharacterBody2D {
 
     private void AttackAreaHit(Node node) {
         if (node == this) return;
-        if (node.IsInGroup("pogoable") || node.GetParent().IsInGroup("pogoable")) {
+        if ((node.IsInGroup("pogoable") || node.GetParent().IsInGroup("pogoable")) && lastAttackDirection.Y > 0) {
             controlledVelocity.Y = -pogoVelocity;
             RegainDash();
         }
@@ -51,12 +59,8 @@ public partial class Angel : CharacterBody2D {
 
     private void OnAttackTimerTimeout() {
         ResetAttack();
+        attackCooldownTimer.Start();
     }
 }
 
-// TODO: Lock wall slash on opposite dir.
-// TODO: Add attack cooldown
-
 // TODO: Fix walljump but no horizontal boost on non-walljupmable spikes
-// TODO: Fix side pogo
-// TODO: Fix mini double jump?

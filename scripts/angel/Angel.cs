@@ -11,7 +11,9 @@ public partial class Angel : CharacterBody2D {
 	[Export] private Timer dashCooldownTimer;
 	[Export] private Timer walljumpLeaveTimer;
 	[Export] private Timer verticalLookTimer;
+
 	[Export] private Timer attackTimer;
+	[Export] private Timer attackCooldownTimer;
 
 	[ExportSubgroup("Components")]
 	[Export] public HealthComponent healthComponent;

@@ -46,7 +46,7 @@ public partial class Angel : CharacterBody2D {
     private bool canStartDash => dashUnlocked && canDash && !isDashing && dashCooldownTimer.IsStopped() && !isAttacking;
     private bool canStartGlide => glideUnlocked && Velocity.Y > 0f && !IsOnFloor() && wallState == WallState.NONE && (doubleJumpUsed || !doubleJumpUnlocked) && !isGliding && !canCoyoteJump && !isDashing;
 
-    private enum WallState { NONE, SLIDING, CLINGING } // NONE: on floor, ADJACENT: "sliding" down wall, not holding input, CLINGING: holding input
+    public enum WallState { NONE, SLIDING, CLINGING } // NONE: on floor, ADJACENT: "sliding" down wall, not holding input, CLINGING: holding input
     private WallState wallState = WallState.NONE;
 
     private void ReadyMovement() {
@@ -102,7 +102,7 @@ public partial class Angel : CharacterBody2D {
 
 		MoveAndSlide();
 
-        if (wasOnFloor && !IsOnFloor()) coyoteTimer.Start();      
+        if (wasOnFloor && !IsOnFloor() && Velocity.Y >= 0) coyoteTimer.Start();
         if (!wasOnWall && IsOnWall() && isDashing && dashDirectionX * GetWallNormal().X < 0) {
             StopDash(true);
         }
@@ -110,7 +110,7 @@ public partial class Angel : CharacterBody2D {
 
     private Vector2 ProcessJump(Vector2 velocity) {
         // Regular jump & WJ
-        if (canBufferJump && (IsOnFloor() || canCoyoteJump || IsOnWallOnly())) { 
+        if (canBufferJump && (IsOnFloor() || canCoyoteJump || wallState != WallState.NONE)) {
             jumpBufferTimer.Stop();
             coyoteTimer.Stop();
 

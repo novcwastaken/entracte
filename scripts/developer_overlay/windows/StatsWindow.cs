@@ -27,22 +27,18 @@ public partial class DeveloperOverlay : Node {
                    KeyValueTableRow("Last direction X", () => ValueDisplay(angel.debugLastDirectionX));
                 });
             });
+
+            Tree("Jump", true, () => {
+                KeyValueTable("JumpTable", () => {
+                   KeyValueTableRow("Coyote timer", () => TimerDisplay(angel.debugCoyoteTimer));
+                   KeyValueTableRow("Jump buffer timer", () => TimerDisplay(angel.debugJumpBufferTimer));
+                });
+            });
         }
 
         if (ImGui.CollapsingHeader("Abilities", ImGuiTreeNodeFlags.DefaultOpen)) {
             Tree("Dash", true, () => {
-                // dash unlocked?
-                // dash direction x
-                // ---
-                // is dashing?
-                // can dash?
-                // can start dash?
-                // can regain dash?
-                // ---
-                // dash timer
-                // dash cooldown timer
-
-                KeyValueTable("DashTable1", () => {
+                KeyValueTable("DashTable", () => {
                     KeyValueTableRow("Dash unlocked?", () => BoolDisplay(angel.debugDashUnlocked));
                     KeyValueTableRow("Dash direction X", () => ValueDisplay(angel.debugDashDirectionX));
                     KeyValueTableRow("Is dashing?", () => BoolDisplay(angel.debugIsDashing));
@@ -56,6 +52,13 @@ public partial class DeveloperOverlay : Node {
 
             // Double jump
             // Walljump
+            Tree("Walljump", true, () => {
+                KeyValueTable("WalljumpTable", () => {
+                    KeyValueTableRow("Walljump unlocked?", () => BoolDisplay(angel.debugWalljumpUnlocked));
+                    KeyValueTableRow("Wall state", () => ValueDisplay(angel.debugWallState));
+                });
+            });
+
             // Glide
         }        
     }

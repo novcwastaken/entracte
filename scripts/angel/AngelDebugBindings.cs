@@ -14,6 +14,12 @@ public partial class Angel : CharacterBody2D {
     public Vector2 debugInputDirection => inputDirection;
     public int debugLastDirectionX => lastDirectionX;
 
+    // Jump
+    public Timer debugJumpBufferTimer => jumpBufferTimer;
+    public Timer debugCoyoteTimer => coyoteTimer;
+    public Timer debugWalljumpLeaveTimer => walljumpLeaveTimer;
+    public Timer debugVerticalLookTimer => verticalLookTimer;
+
     // --- ABILITIES ---
 
     // Dash 
@@ -27,4 +33,8 @@ public partial class Angel : CharacterBody2D {
     // ---
     public Timer debugDashTimer => dashTimer;
     public Timer debugDashCooldownTimer => dashCooldownTimer;
+
+    // Walljump
+    public bool debugWalljumpUnlocked => walljumpUnlocked;
+    public WallState debugWallState => wallState;
 }
