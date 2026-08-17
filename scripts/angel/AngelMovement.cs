@@ -43,7 +43,7 @@ public partial class Angel : CharacterBody2D {
 
     private bool canBufferJump => !jumpBufferTimer.IsStopped();
     private bool canCoyoteJump => !coyoteTimer.IsStopped();
-    private bool canStartDash => dashUnlocked && canDash && !isDashing && dashCooldownTimer.IsStopped();
+    private bool canStartDash => dashUnlocked && canDash && !isDashing && dashCooldownTimer.IsStopped() && !isAttacking;
     private bool canStartGlide => glideUnlocked && Velocity.Y > 0f && !IsOnFloor() && wallState == WallState.NONE && (doubleJumpUsed || !doubleJumpUnlocked) && !isGliding && !canCoyoteJump && !isDashing;
 
     private enum WallState { NONE, SLIDING, CLINGING } // NONE: on floor, ADJACENT: "sliding" down wall, not holding input, CLINGING: holding input
@@ -71,14 +71,13 @@ public partial class Angel : CharacterBody2D {
         controlledVelocity.Y = Mathf.Min(controlledVelocity.Y, terminalVelocity);
 
         // Movement
-		inputDirection = Input.GetVector("left", "right", "up", "down");
-        if (inputDirection.X != 0 && !isDashing) lastDirectionX = (int)inputDirection.X;
+		inputDirection = Input.GetVector("left", "right", "up", "down").Normalized();
+        if (inputDirection.X != 0 && !isDashing) lastDirectionX = inputDirection.X >= 0 ? 1 : -1; // Funky godot stuff (0.71)
 
         if (!walljumpLeaveTimer.IsStopped()) {
             controlledVelocity.X = Mathf.MoveToward(controlledVelocity.X, inputDirection.X * speed, (float)delta);
-        }
-		else if (inputDirection != Vector2.Zero) {
-			if (!isDashing) controlledVelocity.X = inputDirection.X * speed;
+        } else if (inputDirection.X != 0) {
+			if (!isDashing) controlledVelocity.X = (inputDirection.X >= 0 ? 1 : -1) * speed; // Mekanik
 		} else {
 			controlledVelocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
 		}
@@ -195,7 +194,12 @@ public partial class Angel : CharacterBody2D {
         }
     }
 
-    private void UpdateWallState() {
+    private void UpdateWallState() {        
+        if (IsOnWallOnly() && !IsTouchingWallGroup("walljumpable")) {
+            wallState = WallState.NONE;
+            return;
+        }
+
         bool holdingClingInput = Mathf.IsEqualApprox(inputDirection.X, -GetWallNormal().X) && inputDirection.X != 0f;
 
         if (IsOnWallOnly() && holdingClingInput) {
@@ -205,6 +209,19 @@ public partial class Angel : CharacterBody2D {
         } else {
             wallState = WallState.NONE;
         }
+    }
+
+    private bool IsTouchingWallGroup(string group) {
+        int slideCount = GetSlideCollisionCount();
+        
+        for (int i = 0; i < slideCount; i++) {
+            KinematicCollision2D collision = GetSlideCollision(i);
+            GodotObject collider = collision.GetCollider();
+
+            if (collider is Node node && node.IsInGroup(group)) return true;
+        }
+
+        return false;
     }
 
     private void OnDashTimerTimeout() {

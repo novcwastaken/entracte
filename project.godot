@@ -39,6 +39,8 @@ enabled=PackedStringArray("res://addons/at-icons/plugin.cfg", "res://addons/imgu
 [global_group]
 
 angel=""
+pogoable=""
+walljumpable=""
 
 [input]
 

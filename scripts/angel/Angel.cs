@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-[GlobalClass, Icon("res://addons/at-icons/mesh/wing.svg")]
+[GlobalClass, Icon("res://addons/at-icons/node2d/comedy_mask.svg")]
 public partial class Angel : CharacterBody2D {
 	[ExportGroup("Nodes")]
 	[ExportSubgroup("Timers")]
@@ -13,6 +13,9 @@ public partial class Angel : CharacterBody2D {
 	[Export] private Timer verticalLookTimer;
 	[Export] private Timer attackTimer;
 
+	[ExportSubgroup("Components")]
+	[Export] public HealthComponent healthComponent;
+
 	[ExportSubgroup("Camera")]
 	[Export] private Camera camera;
 
@@ -23,7 +26,7 @@ public partial class Angel : CharacterBody2D {
 	[Export] public float horizontalOffsetLerpWeight = 0.025f;
 
 	[ExportGroup("Debug")]
-	[Export] private Label debugLabel;
+	[Export] private Label healthLabel;
 
 	public override void _Ready() {
 		ReadyMovement();
@@ -34,50 +37,11 @@ public partial class Angel : CharacterBody2D {
 		ProcessMovement(delta);
 		ProcessFlip();
 
-		UpdateDebugLabel();
+		UpdateHealthLabel();		
 	}
 
-	private void UpdateDebugLabel() {
-		debugLabel.Text = $"""
-			velocity = {Velocity}
-
-			inputDirection = {inputDirection}
-			lastDirectionX = {lastDirectionX}
-
-			jumpBufferTimer.TimeLeft = {jumpBufferTimer.TimeLeft}
-			jumpBufferTimer.IsStopped = {jumpBufferTimer.IsStopped()}
-
-			coyoteTimer.TimeLeft = {coyoteTimer.TimeLeft}
-			coyoteTimer.IsStopped = {coyoteTimer.IsStopped()}
-
-			dashTimer.TimeLeft = {dashTimer.TimeLeft}
-			dashCooldownTimer.TimeLeft = {dashCooldownTimer.TimeLeft}
-			isDashing = {isDashing}
-			canDash = {canDash}
-			dashDirectionX = {dashDirectionX}
-
-			debugDashTimer.TimeLeft = {debugDashTimer.TimeLeft}
-
-			wallNormal = {GetWallNormal()}
-			isOnWall = {IsOnWall()}
-			isOnWallOnly = {IsOnWallOnly()}
-			wallState = {wallState}
-
-			jump pressed = {Input.IsActionPressed("jump")}
-			canStartGlide = {canStartGlide}
-			- glideUnlocked = {glideUnlocked}
-			- Velocity.Y > 0f = {Velocity.Y > 0f}
-			- !IsOnFloor() = {!IsOnFloor()}
-			- wallState == WallState.NONE = {wallState == WallState.NONE}
-			- (doubleJumpUsed || !doubleJumpUnlocked) == {doubleJumpUsed || !doubleJumpUnlocked}
-			- !isGliding = {!isGliding}
-			- !canCoyoteJump = {!canCoyoteJump}
-			- !canBufferJump = {!canBufferJump}
-
-			isGliding = {isGliding}
-
-			attackTimer.TimeLeft = {attackTimer.TimeLeft}
-		""";
+	private void UpdateHealthLabel() {
+		healthLabel.Text = $"{healthComponent.currentHealth}/{healthComponent.maxHealth}";
 	}
 
 	private void OnVerticalLookTimerTimeout() {

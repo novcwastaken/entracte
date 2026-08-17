@@ -23,11 +23,11 @@ public partial class Angel : CharacterBody2D {
 		}
 
 		// Look
-		if (@event.IsActionPressed("up") || @event.IsActionPressed("down") && !isMoving) {
+		if (@event.IsActionPressed("up") || @event.IsActionPressed("down") && !isMoving && !isAttacking) {
 			verticalLookTimer.Start();
 		}
 
-		if (@event.IsActionReleased("up") || @event.IsActionReleased("down") || isMoving) {
+		if (@event.IsActionReleased("up") || @event.IsActionReleased("down") || isMoving || isAttacking) {
 			camera.ResetOffset();
 		}
 

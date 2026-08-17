@@ -9,10 +9,6 @@ public partial class DeveloperOverlay : Node {
     private readonly ImGuiTableFlags keyValueTableFlags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg;
     private readonly float windowWidth = 350f;
 
-    private bool statsWindowVisible = true;
-    private bool unlocksWindowVisible = true;
-    private bool cheatsWindowVisible = true;
-
     public override void _UnhandledInput(InputEvent @event) {
         if (@event.IsActionPressed("toggle_developer_overlay")) {
             overlayEnabled = !overlayEnabled;
@@ -25,29 +21,12 @@ public partial class DeveloperOverlay : Node {
     }
 
     private void MainOverlay() {
-        var viewportSize = GetViewport().GetVisibleRect().Size;
-        var toggleWindowSize = new System.Numerics.Vector2(220f, 120f);
-
-        var toggleWindowPos = new System.Numerics.Vector2(
-            viewportSize.X - toggleWindowSize.X - 20f,
-            viewportSize.Y - toggleWindowSize.Y - 20f
-        );
-
-        ImGui.SetNextWindowPos(toggleWindowPos, ImGuiCond.Always);
-        ImGui.SetNextWindowSize(toggleWindowSize, ImGuiCond.Always);
-        ImGui.Begin("Visible Windows", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
-
-        ImGui.Checkbox("Stats", ref statsWindowVisible);
-        ImGui.Checkbox("Unlocks", ref unlocksWindowVisible);
-        ImGui.Checkbox("Cheats", ref cheatsWindowVisible);
-
-        ImGui.End();
-
         int windowIndex = 0;
 
-        AddNewWindow(statsWindowVisible, "Stats", StatsWindow, windowIndex++);
-        AddNewWindow(unlocksWindowVisible, "Unlocks", UnlocksWindow, windowIndex++);
-        AddNewWindow(cheatsWindowVisible, "Cheats", CheatsWindow, windowIndex);
+        AddNewWindow(true, "Stats", StatsWindow, windowIndex++);
+        AddNewWindow(true, "Unlocks", UnlocksWindow, windowIndex++);
+        AddNewWindow(true, "Cheats", CheatsWindow, windowIndex++);
+        AddNewWindow(true, "Performance", PerformanceWindow, windowIndex);
     }
 
     private void AddNewWindow(bool condition, string title, Action windowMethod, int windowIndex) {

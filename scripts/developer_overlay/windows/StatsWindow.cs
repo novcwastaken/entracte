@@ -24,7 +24,7 @@ public partial class DeveloperOverlay : Node {
             Tree("Input", true, () => {
                 KeyValueTable("InputTable", () => {
                    KeyValueTableRow("Input direction", () => Vector2Display(angel.debugInputDirection));
-                   KeyValueTableRow("Last direciton X", () => ValueDisplay(angel.debugLastDirectionX));
+                   KeyValueTableRow("Last direction X", () => ValueDisplay(angel.debugLastDirectionX));
                 });
             });
         }

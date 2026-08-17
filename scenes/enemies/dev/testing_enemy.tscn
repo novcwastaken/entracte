@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://od4nh32258ho"]
+
+[ext_resource type="Script" uid="uid://wn564x6eovmh" path="res://scripts/components/HealthComponent.cs" id="1_48v8k"]
+
+[sub_resource type="Gradient" id="Gradient_nxi2q"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hhhu5"]
+gradient = SubResource("Gradient_nxi2q")
+height = 128
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hhhu5"]
+size = Vector2(64, 128)
+
+[node name="TestingEnemy" type="CharacterBody2D" unique_id=140204143 groups=["pogoable"]]
+
+[node name="TempSprite" type="Sprite2D" parent="." unique_id=1130524739]
+texture = SubResource("GradientTexture2D_hhhu5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2138924270]
+visible = false
+shape = SubResource("RectangleShape2D_hhhu5")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=865058798]
+script = ExtResource("1_48v8k")
+metadata/_custom_type_script = "uid://wn564x6eovmh"
